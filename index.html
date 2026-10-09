@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro Pocket Calculator</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Space Grotesk for body, Share Tech Mono for the LCD display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    class="bg-[#c3d7cd] min-h-screen flex flex-col items-center justify-between p-4 sm:p-6 select-none font-sans text-neutral-700"
+  >
+    <!-- Top Status Bar -->
+    <header
+      class="w-full max-w-sm flex items-center justify-between text-[11px] font-semibold tracking-wider text-[#436456] pt-1"
+    >
+      <div class="flex items-center gap-2">
+        <span
+          class="w-2.5 h-2.5 rounded-full bg-[#527d6c] inline-block shadow-sm"
+        ></span>
+        <span class="uppercase tracking-widest text-[10px]"
+          >Vintage Retro Series</span
+        >
+      </div>
+
+      <!-- Info button -->
+      <button
+        id="infoBtn"
+        title="Keyboard shortcuts"
+        aria-label="View keyboard shortcuts"
+        class="w-4 h-4 rounded-full border border-[#436456] flex items-center justify-center text-[10px] font-bold text-[#436456] hover:bg-[#436456] hover:text-[#ece5d8] transition-colors cursor-pointer"
+      >
+        ?
+      </button>
+    </header>
+
+    <!-- Main Calculator Body & Inline Shortcuts -->
+    <main class="w-full max-w-[360px] my-auto flex flex-col items-center">
+      <div
+        class="calculator-body w-full bg-[#ece5d8] rounded-[2.5rem] p-6 shadow-2xl relative border border-[#dfd6c6]"
+      >
+        <!-- Top Branding & Solar Cell -->
+        <div class="flex items-start justify-between mb-4 px-1">
+          <div>
+            <h1 class="text-xs font-bold tracking-wider text-[#3d423f]">
+              RETRO-1200
+            </h1>
+            <p
+              class="text-[8.5px] font-semibold text-[#8b918b] tracking-wider mt-0.5 uppercase"
+            >
+              Two Way Power • 12 Digits
+            </p>
+          </div>
+
+          <!-- Solar Panel Grid (4 glass cells) -->
+          <div
+            class="solar-panel w-20 h-5 bg-[#2c221e] rounded-sm p-[2px] grid grid-cols-4 gap-[2px] shadow-inner"
+          >
+            <div class="solar-cell"></div>
+            <div class="solar-cell"></div>
+            <div class="solar-cell"></div>
+            <div class="solar-cell"></div>
+          </div>
+        </div>
+
+        <!-- Recessed LCD Display Area -->
+        <div class="lcd-bezel rounded-2xl p-2.5 mb-5 shadow-inner">
+          <div
+            class="lcd-screen relative rounded-xl h-16 px-3 py-1 flex flex-col justify-between overflow-hidden"
+          >
+            <!-- Top Flags (Memory, Minus, Error) -->
+            <div
+              class="flex items-center gap-2 text-[10px] text-[#33423b] font-mono leading-none pt-0.5"
+            >
+              <span
+                id="flagMemory"
+                class="opacity-0 transition-opacity font-bold"
+                >M</span
+              >
+              <span
+                id="flagMinus"
+                class="opacity-0 transition-opacity font-bold"
+                >−</span
+              >
+              <span
+                id="flagError"
+                class="opacity-0 transition-opacity font-bold"
+                >E</span
+              >
+            </div>
+
+            <!-- LCD Digits: Ghost 8s Layer + Active Digits Layer -->
+            <div class="relative w-full text-right leading-none pb-0.5">
+              <!-- Ghost background '888888888888' visible like real LCD -->
+              <span
+                class="lcd-ghost absolute right-0 bottom-0 text-[32px] font-mono select-none"
+                >888888888888</span
+              >
+              <!-- Active dynamic value -->
+              <span
+                id="display"
+                class="lcd-value relative z-10 text-[32px] font-mono tracking-tight text-[#17221d]"
+                >0</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Button Grid: 5 columns x 5 rows -->
+        <div class="grid grid-cols-5 gap-2.5">
+          <!-- ROW 1 (Pastel Functional Mint) -->
+          <button data-action="mrc" class="btn btn-mint text-xs">MRC</button>
+          <button data-action="m-minus" class="btn btn-mint text-xs">M−</button>
+          <button data-action="m-plus" class="btn btn-mint text-xs">M+</button>
+          <button data-action="ce" class="btn btn-mint text-xs font-semibold">
+            CE
+          </button>
+          <button data-action="ac" class="btn btn-mint text-xs font-semibold">
+            AC
+          </button>
+
+          <!-- ROW 2 -->
+          <button data-action="sqrt" class="btn btn-mint text-sm">√</button>
+          <button data-num="7" class="btn btn-ivory text-base">7</button>
+          <button data-num="8" class="btn btn-ivory text-base">8</button>
+          <button data-num="9" class="btn btn-ivory text-base">9</button>
+          <button data-action="divide" class="btn btn-mint text-base">÷</button>
+
+          <!-- ROW 3 -->
+          <button data-action="percent" class="btn btn-mint text-xs">%</button>
+          <button data-num="4" class="btn btn-ivory text-base">4</button>
+          <button data-num="5" class="btn btn-ivory text-base">5</button>
+          <button data-num="6" class="btn btn-ivory text-base">6</button>
+          <button data-action="multiply" class="btn btn-mint text-sm">×</button>
+
+          <!-- ROW 4 -->
+          <button
+            data-action="backspace"
+            class="btn btn-mint text-sm flex items-center justify-center"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.5-6.5A2 2 0 0110.914 5H20a1 1 0 011 1v12a1 1 0 01-1 1h-9.086a2 2 0 01-1.414-.586L3 12z"
+              />
+            </svg>
+          </button>
+          <button data-num="1" class="btn btn-ivory text-base">1</button>
+          <button data-num="2" class="btn btn-ivory text-base">2</button>
+          <button data-num="3" class="btn btn-ivory text-base">3</button>
+          <button data-action="subtract" class="btn btn-mint text-base">
+            −
+          </button>
+
+          <!-- ROW 5 (Deep Vintage Forest/Moss Green) -->
+          <button data-num="0" class="btn btn-dark text-base">0</button>
+          <button data-action="00" class="btn btn-dark text-xs">00</button>
+          <button
+            data-action="dot"
+            class="btn btn-dark text-base font-bold leading-none"
+          >
+            .
+          </button>
+          <button data-action="equals" class="btn btn-dark text-base">=</button>
+          <button data-action="add" class="btn btn-dark text-base">+</button>
+        </div>
+      </div>
+
+      <!-- Keyboard Shortcuts Card (Inline DOM, toggled by infoBtn) -->
+      <div
+        id="shortcutsCard"
+        class="hidden shortcuts-card w-full mt-6 bg-[#ece5d8] rounded-[1.75rem] p-5 sm:p-6 border border-[#dfd6c6] shadow-xl transition-all duration-300"
+      >
+        <!-- Card Header -->
+        <div
+          class="flex items-center justify-between pb-2.5 border-b border-[#dfd6c6]"
+        >
+          <div class="flex items-center gap-2 text-[#243f33]">
+            <!-- (i) Info Icon -->
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <h2 class="text-sm font-bold tracking-wide">
+              Keyboard Shortcuts
+            </h2>
+          </div>
+          <!-- Close Button -->
+          <button
+            id="closeShortcutsBtn"
+            type="button"
+            class="text-[#243f33]/70 hover:text-[#243f33] p-1 rounded-full hover:bg-[#dfd6c6]/50 transition-colors cursor-pointer"
+            aria-label="Close keyboard shortcuts"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Shortcuts Grid (2 Columns matching reference image) -->
+        <div
+          class="grid grid-cols-2 gap-x-3 sm:gap-x-4 gap-y-3 pt-3.5 text-[11.5px] font-medium text-[#2d473a]"
+        >
+          <!-- Row 1 -->
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">0-9</kbd>
+            <span>Digits</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">+ - * /</kbd>
+            <span>Operators</span>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">Enter / =</kbd>
+            <span>Equals</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">Backspace</kbd>
+            <span>Backspace</span>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">Escape</kbd>
+            <span>All Clear (AC)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">Delete / C</kbd>
+            <span>Clear Entry (CE)</span>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">%</kbd>
+            <span>Percentage</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">M</kbd>
+            <span>Recall/Clear (MRC)</span>
+          </div>
+
+          <!-- Row 5 -->
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">S / R</kbd>
+            <span>Square Root (√)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <kbd class="shortcut-key">.</kbd>
+            <span>Decimal Point</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Caption -->
+    <footer
+      class="text-[11px] text-[#4a6b5c] font-medium tracking-wide text-center py-4"
+    >
+      Retro Pocket Calculator • HTML , Tailwind CSS & JavaScript
+    </footer>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+  </body>
+</html>
